@@ -1,4 +1,4 @@
-package com.bestbuy.assertionexample;
+package com.bestbuy.assertionresponse;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
