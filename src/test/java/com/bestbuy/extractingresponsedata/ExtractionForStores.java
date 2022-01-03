@@ -1,11 +1,12 @@
 package com.bestbuy.extractingresponsedata;
 
+import com.google.gson.GsonBuilder;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -61,7 +62,7 @@ public class ExtractionForStores {
     public void test004(){
         List<String> storeNames = response.extract().path("data.name");
         System.out.println("------------------StartingTest---------------------------");
-        System.out.println("Names of all stores : " + storeNames);
+        System.out.println("Names of all stores : " + new GsonBuilder().setPrettyPrinting().create().toJson(storeNames));
         System.out.println("------------------End of Test---------------------------");
     }
 
@@ -70,7 +71,7 @@ public class ExtractionForStores {
     public void test005(){
         List<Integer> storeIds = response.extract().path("data.id");
         System.out.println("------------------StartingTest---------------------------");
-        System.out.println("StoreId of all stores : " + storeIds);
+        System.out.println("StoreId of all stores : " + new GsonBuilder().setPrettyPrinting().create().toJson(storeIds));
         System.out.println("------------------End of Test---------------------------");
     }
 
@@ -88,7 +89,7 @@ public class ExtractionForStores {
     public void test007(){
         List<String> value = response.extract().path("data.findAll{it.name=='St Cloud'}");
         System.out.println("------------------StartingTest---------------------------");
-        System.out.println("All the value of store name St Cloud : " + value);
+        System.out.println("All the value of store name St Cloud : " + new GsonBuilder().setPrettyPrinting().create().toJson(value));
         System.out.println("------------------End of Test---------------------------");
     }
 
@@ -106,17 +107,17 @@ public class ExtractionForStores {
     public void test009(){
         List<String> services = response.extract().path("data[7].services");
         System.out.println("------------------StartingTest---------------------------");
-        System.out.println("All services of 8th Store : " + services);
+        System.out.println("All services of 8th Store : " + new GsonBuilder().setPrettyPrinting().create().toJson(services));
         System.out.println("------------------End of Test---------------------------");
     }
 
     // 10. Get storeservices of the store where service name = Windows Store
     @Test
     public void test010(){
-        List<HashMap<String, ?>> storeServices = response.extract().path("data.services.findAll{it.name=='Windows Store'}.storeservices");
-//        List<String> storeServices = response.extract().path("data.findAll{it.name=='Windows Store'}.storeservices");
+        List<LinkedHashMap> services = response.extract().path("data.findAll{it.name='Windows Store'}.services");
+        String jsonPath = "$.*.services[?(@.name=='Windows Store')].storeservices"; // JSON Path for locating storeservices where service name is Windows Store
         System.out.println("------------------StartingTest---------------------------");
-        System.out.println("Storeservices of the store where service name Windows Store : " + storeServices);
+        System.out.println("Storeservices of the store where service name Windows Store : " + new GsonBuilder().setPrettyPrinting().create().toJson(services));
         System.out.println("------------------End of Test---------------------------");
     }
 
@@ -126,7 +127,7 @@ public class ExtractionForStores {
     public void test011(){
         List <String> storeId = response.extract().path("data.services.storeservices.storeId");
         System.out.println("------------------StartingTest---------------------------");
-        System.out.println("StoreId's of all stores : " + storeId);
+        System.out.println("StoreId's of all stores : " + new GsonBuilder().setPrettyPrinting().create().toJson(storeId));
         System.out.println("------------------End of Test---------------------------");
     }
 
@@ -135,7 +136,7 @@ public class ExtractionForStores {
     public void test012(){
         List<String> id = response.extract().path("data.id");
         System.out.println("------------------StartingTest---------------------------");
-        System.out.println("Id's of all Stores : " + id);
+        System.out.println("Id's of all Stores : " + new GsonBuilder().setPrettyPrinting().create().toJson(id));
         System.out.println("------------------End of Test---------------------------");
     }
 
@@ -144,7 +145,7 @@ public class ExtractionForStores {
     public void test013(){
         List<String> storeName = response.extract().path("data.findAll{it.state=='MN'}.name");
         System.out.println("------------------StartingTest---------------------------");
-        System.out.println("Store name for state ND is : " + storeName);
+        System.out.println("Store name for state ND is : " + new GsonBuilder().setPrettyPrinting().create().toJson(storeName));
         System.out.println("------------------End of Test---------------------------");
     }
 
@@ -160,11 +161,11 @@ public class ExtractionForStores {
     // 15. Find the createdAt for all services whose name = Windows Store
     @Test
     public void test015(){
-//        List<HashMap<String, ?>> createdAt = response.extract().path("data.findAll{it.services.name=='Windows Store'}.createdAt");
-//        List<HashMap<String, ?>> createdAt = response.extract().path("data.findAll{it.services.name=='Windows Store'}.createdAt");
-        List <String> createdAt = response.extract().path("data.services.createdAt");
+        List<List<LinkedHashMap>> createdAt = response.extract().path("data.findAll{it.name!=''}");
+        String jsonPath = "$.*.services[?(@.name=='Windows Store')].createdAt"; // JSON Path for locating services where name is Windows Store
         System.out.println("------------------StartingTest---------------------------");
-        System.out.println("All createdAt for all services whose name is 'Windows Store' : " + createdAt);
+        System.out.println("All createdAt for all services whose name is 'Windows Store' : " + new GsonBuilder().setPrettyPrinting().create().toJson(createdAt));
+        System.out.println("All createdAt for all services whose name is 'Windows Store' : " + createdAt.size());
         System.out.println("------------------End of Test---------------------------");
     }
 
@@ -173,7 +174,7 @@ public class ExtractionForStores {
     public void test016(){
         List<String> services = response.extract().path("data[7].services");
         System.out.println("------------------StartingTest---------------------------");
-        System.out.println("Name of all services for store name 'Fargo' : " + services);
+        System.out.println("Name of all services for store name 'Fargo' : " + new GsonBuilder().setPrettyPrinting().create().toJson(services));
         System.out.println("------------------End of Test---------------------------");
     }
 
@@ -182,7 +183,7 @@ public class ExtractionForStores {
     public void test017(){
         List<String> zip = response.extract().path("data.zip");
         System.out.println("------------------StartingTest---------------------------");
-        System.out.println("Zip of all stores : " + zip);
+        System.out.println("Zip of all stores : " + new GsonBuilder().setPrettyPrinting().create().toJson(zip));
         System.out.println("------------------End of Test---------------------------");
     }
 
@@ -198,9 +199,10 @@ public class ExtractionForStores {
     // 19. Find the storeservices details of the service name = Magnolia Home Theater
     @Test
     public void test019(){
-        List<String> storeServices = response.extract().path("data.service.findAll{it.name=='Magnolia Home Theater'}.storeservices");
+        List<LinkedHashMap> storeServices = response.extract().path("data.findAll{it.name!=''}");
+        String jsonPath = "$.*.services[?(@.name=='Magnolia Home Theater')].storeservices"; // JSON Path for locating storeservices where service name is Magnolia Home Theater
         System.out.println("------------------StartingTest---------------------------");
-        System.out.println("Storeservices details of the service name = Magnolia Home Theater : " + storeServices);
+        System.out.println("Storeservices details of the service name = Magnolia Home Theater : " + new GsonBuilder().setPrettyPrinting().create().toJson(storeServices));
         System.out.println("------------------End of Test---------------------------");
     }
 
@@ -209,7 +211,7 @@ public class ExtractionForStores {
     public void test020(){
         List<Integer> lat = response.extract().path("data.lat");
         System.out.println("------------------StartingTest---------------------------");
-        System.out.println("lat of all stores : " + lat);
+        System.out.println("lat of all stores : " + new GsonBuilder().setPrettyPrinting().create().toJson(lat));
         System.out.println("------------------End of Test---------------------------");
     }
 
