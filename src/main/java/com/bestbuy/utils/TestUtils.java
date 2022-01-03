@@ -14,7 +14,7 @@ public class TestUtils {
 		String saltChars = "abcdefghijklmnopqrstuvwxyz1234567890";
 		StringBuilder name = new StringBuilder();
 		Random random = new Random();
-		while (name.length() < 7) {
+		while (name.length() < 10) {
 			int index = (int) (random.nextFloat() * saltChars.length());
 			name.append(saltChars.charAt(index));
 		}
